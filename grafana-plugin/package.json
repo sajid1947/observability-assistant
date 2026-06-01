@@ -1,0 +1,36 @@
+{
+  "name": "observability-assistant-panel",
+  "version": "1.0.0",
+  "description": "AI-powered observability assistant panel for Grafana",
+  "scripts": {
+    "build": "webpack -c ./webpack.config.ts --env production",
+    "dev": "webpack -w -c ./webpack.config.ts --env development",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint --fix src/"
+  },
+  "author": "Observability Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@grafana/data": "^11.0.0",
+    "@grafana/runtime": "^11.0.0",
+    "@grafana/ui": "^11.0.0",
+    "@grafana/toolkit": "^11.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "copy-webpack-plugin": "^12.0.0",
+    "css-loader": "^7.0.0",
+    "replace-in-file-webpack-plugin": "^1.0.6",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.4.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.0",
+    "ts-jest": "^29.1.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

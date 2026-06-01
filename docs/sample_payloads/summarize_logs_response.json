@@ -1,0 +1,31 @@
+{
+  "summary": "Database connectivity failure on api-gateway causing cascading service degradation. postgres-primary experienced connection timeouts leading to pool exhaustion and circuit breaker activation. Service partially recovered using Redis cache fallback.",
+  "root_cause": "PostgreSQL primary database (postgres-primary:5432) became unresponsive, causing connection timeouts (30s) and exhausting the connection pool (0/20 available). This triggered circuit breaker activation and 503 errors on user-facing endpoints.",
+  "severity": "critical",
+  "confidence": "92%",
+  "evidence": [
+    "4 ERROR-level events in 10 seconds indicating rapid failure cascade",
+    "Connection timeout to postgres-primary:5432 repeated twice within 4 seconds",
+    "Connection pool fully exhausted: 0/20 connections available",
+    "HTTP 503 errors returned to clients on /api/v1/users",
+    "Circuit breaker transitioned to OPEN state for postgres-primary",
+    "Recovery observed at 14:31:00 — connection restored after ~60 seconds"
+  ],
+  "recommendations": [
+    "Investigate PostgreSQL primary for resource exhaustion, lock contention, or network issues",
+    "Increase connection pool size from 20 to 50 with proper timeout configuration",
+    "Implement connection pool warm-up and health-check queries",
+    "Add read replica for read-heavy endpoints to reduce primary load",
+    "Configure PgBouncer as a connection pooler in front of PostgreSQL",
+    "Set up proactive alerting on connection pool utilization > 80%"
+  ],
+  "anomalies_detected": [
+    "Complete connection pool exhaustion (0/20) — indicates no connection recycling",
+    "30-second timeout suggests TCP-level connectivity issue, not query slowness",
+    "Recovery after 60 seconds without intervention — possibly transient network issue"
+  ],
+  "request_id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+  "model_used": "qwen3:8b",
+  "processing_time_ms": 5102,
+  "cached": false
+}

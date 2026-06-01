@@ -1,0 +1,23 @@
+{
+  "metric_name": "http_request_duration_seconds",
+  "values": [0.12, 0.15, 0.11, 0.13, 0.14, 0.12, 0.45, 1.2, 2.3, 3.1, 2.8, 0.18, 0.14, 0.13],
+  "timestamps": [
+    "2024-01-15T14:00:00Z", "2024-01-15T14:05:00Z", "2024-01-15T14:10:00Z",
+    "2024-01-15T14:15:00Z", "2024-01-15T14:20:00Z", "2024-01-15T14:25:00Z",
+    "2024-01-15T14:30:00Z", "2024-01-15T14:35:00Z", "2024-01-15T14:40:00Z",
+    "2024-01-15T14:45:00Z", "2024-01-15T14:50:00Z", "2024-01-15T14:55:00Z",
+    "2024-01-15T15:00:00Z", "2024-01-15T15:05:00Z"
+  ],
+  "labels": {
+    "service": "api-gateway",
+    "endpoint": "/api/v1/users",
+    "method": "GET"
+  },
+  "time_range": {
+    "start": "2024-01-15T14:00:00Z",
+    "end": "2024-01-15T15:10:00Z"
+  },
+  "query": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{service=\"api-gateway\"}[5m]))",
+  "threshold": 1.0,
+  "unit": "seconds"
+}

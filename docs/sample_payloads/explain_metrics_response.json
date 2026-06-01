@@ -1,0 +1,30 @@
+{
+  "summary": "Transient latency spike on api-gateway /api/v1/users endpoint. P99 latency spiked from a baseline of ~130ms to a peak of 3100ms between 14:30-14:50 UTC, exceeding the 1s SLO threshold for 4 consecutive intervals. Latency has since recovered to baseline.",
+  "root_cause": "Upstream dependency degradation (likely database) caused request queuing and increased response times. The spike pattern (gradual increase → peak → recovery) is consistent with a transient backend resource constraint that self-resolved.",
+  "severity": "medium",
+  "confidence": "79%",
+  "evidence": [
+    "Baseline latency: 120-150ms (first 6 data points, avg 128ms)",
+    "Spike onset at 14:30 UTC: latency jumped from 120ms to 450ms (3.75x increase)",
+    "Peak latency: 3100ms at 14:45 UTC (25.8x baseline)",
+    "SLO threshold (1s) exceeded for 4 intervals: 14:35-14:50 UTC",
+    "Recovery observed at 14:55 UTC: latency dropped to 180ms",
+    "Full recovery by 15:00 UTC: latency returned to 130-140ms baseline"
+  ],
+  "recommendations": [
+    "Correlate with database metrics — check postgres query latency during 14:30-14:50 window",
+    "Review connection pool metrics for exhaustion events in the same timeframe",
+    "Set up SLO-based alerting: alert if p99 > 1s for more than 3 consecutive intervals",
+    "Consider implementing request timeout at 2s to prevent cascading slowdowns",
+    "Add client-side retry with exponential backoff for transient failures"
+  ],
+  "anomalies_detected": [
+    "Latency spike from 120ms to 3100ms (25.8x) between 14:30-14:45 UTC",
+    "4 consecutive SLO threshold violations (> 1s) indicating sustained degradation",
+    "Rapid recovery pattern suggests transient issue rather than permanent degradation"
+  ],
+  "request_id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+  "model_used": "qwen3:8b",
+  "processing_time_ms": 3891,
+  "cached": false
+}

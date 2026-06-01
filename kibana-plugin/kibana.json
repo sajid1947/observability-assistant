@@ -1,0 +1,10 @@
+{
+  "id": "observabilityAssistant",
+  "version": "1.0.0",
+  "kibanaVersion": "8.x",
+  "server": true,
+  "ui": true,
+  "requiredPlugins": ["data", "navigation"],
+  "optionalPlugins": [],
+  "requiredBundles": []
+}

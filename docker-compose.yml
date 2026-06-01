@@ -1,0 +1,83 @@
+# ──────────────────────────────────────────────────────────────────
+# Docker Compose — AI-Powered Observability Assistant
+#
+# Services:
+#   backend  — FastAPI backend on port 8080
+#   ollama   — Ollama LLM server on port 11434
+# ──────────────────────────────────────────────────────────────────
+
+services:
+  # ── FastAPI Backend ──
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: obs-assistant-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - LLM_BACKEND=ollama
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen3:8b}
+      - API_KEY=${API_KEY:-dev-key-change-me-in-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["*"]}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEBUG=${DEBUG:-false}
+      - CACHE_TTL=${CACHE_TTL:-300}
+      - RATE_LIMIT_REQUESTS=${RATE_LIMIT_REQUESTS:-30}
+    depends_on:
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - obs-network
+
+  # ── Ollama LLM Server ──
+  ollama:
+    image: ollama/ollama:latest
+    container_name: obs-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # GPU support (uncomment if you have NVIDIA GPU)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    restart: unless-stopped
+    networks:
+      - obs-network
+
+  # ── Model Puller (runs once to download the model) ──
+  ollama-pull:
+    image: ollama/ollama:latest
+    container_name: obs-ollama-pull
+    depends_on:
+      ollama:
+        condition: service_started
+    entrypoint: >
+      sh -c "
+        echo 'Waiting for Ollama to be ready...' &&
+        sleep 5 &&
+        ollama pull ${OLLAMA_MODEL:-qwen3:8b} &&
+        echo 'Model pulled successfully!'
+      "
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    networks:
+      - obs-network
+    restart: "no"
+
+
+
+networks:
+  obs-network:
+    driver: bridge
+
+volumes:
+  # Only Ollama requires a volume.
+  ollama_data:

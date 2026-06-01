@@ -1,0 +1,29 @@
+{
+  "summary": "Critical CPU and memory spike correlated with traffic surge on web-01 in us-east-1. CPU peaked at 95.1% and memory grew by 62% over 50 minutes, coinciding with a 4x increase in HTTP request volume starting at 14:15 UTC.",
+  "root_cause": "Traffic surge caused resource exhaustion on web-01. HTTP requests increased from 1200/5min to 5100/5min (4.25x), overwhelming the single instance's capacity. Memory growth pattern suggests potential memory leak under high load conditions.",
+  "severity": "high",
+  "confidence": "88%",
+  "evidence": [
+    "CPU usage spiked from 45.2% to 95.1% between 14:00 and 14:40 UTC",
+    "Memory increased from 2.0GB to 3.5GB (62% growth) in the same period",
+    "HTTP requests surged from 1200 to 5100 per 5-min interval (4.25x increase)",
+    "CPU and traffic spikes are temporally correlated (traffic spike preceded CPU spike by ~5 min)",
+    "Memory did not decrease proportionally when traffic subsided, suggesting a potential leak"
+  ],
+  "recommendations": [
+    "Immediately: Scale horizontally by adding instances behind the load balancer",
+    "Set up CPU-based auto-scaling with threshold at 75% to prevent future saturation",
+    "Investigate potential memory leak — memory grew 62% but didn't recover with reduced traffic",
+    "Add circuit breaker pattern for upstream services to prevent cascade failures",
+    "Configure alerting for CPU > 80% and memory growth > 50% in 30 minutes"
+  ],
+  "anomalies_detected": [
+    "CPU reached 95.1% at 14:40 UTC — significantly above normal baseline of ~50%",
+    "Memory grew monotonically from 2.0GB to 3.5GB without recovery, suggesting a leak",
+    "Traffic spike to 5100 req/5min at 14:30 — 4.25x the baseline of 1200 req/5min"
+  ],
+  "request_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "model_used": "qwen3:8b",
+  "processing_time_ms": 4523,
+  "cached": false
+}

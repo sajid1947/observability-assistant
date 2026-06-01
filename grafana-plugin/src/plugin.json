@@ -1,0 +1,22 @@
+{
+  "type": "panel",
+  "name": "Observability Assistant",
+  "id": "observability-assistant-panel",
+  "info": {
+    "description": "AI-powered observability assistant that analyzes dashboard metrics using local LLMs",
+    "author": {
+      "name": "Observability Team"
+    },
+    "keywords": ["observability", "ai", "llm", "sre", "analysis"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "version": "1.0.0",
+    "updated": "2024-01-01"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=10.0.0",
+    "plugins": []
+  }
+}

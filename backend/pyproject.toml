@@ -1,0 +1,14 @@
+[project]
+name = "observability-assistant-backend"
+version = "1.0.0"
+description = "AI-powered observability assistant backend service"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
